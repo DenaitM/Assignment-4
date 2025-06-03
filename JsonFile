@@ -1,0 +1,31 @@
+import json
+import ssl
+from urllib.request import urlopen
+
+def main():
+    
+    # fetch forecast data from the NWS API for Muncie, IN
+    url = "https://api.weather.gov/points/40.1934,-85.3864"  # Muncie, Indiana coordinates
+    context = ssl._create_unverified_context()
+    response = urlopen(url, context=context)
+    weatherData = json.loads(response.read())
+
+    forecastUrl = weatherData["properties"]["forecast"]
+
+    forecastUrlResponse = urlopen(forecastUrl, context=context)
+    forecastData = json.loads(forecastUrlResponse.read())
+    periods = forecastData["properties"]["periods"]
+
+
+    for period in periods:
+        print("Day: ", period["name"])
+        print("Temperature: ", period["temperature"])
+        print("Forecast: ", period["detailedForecast"])
+
+        print()
+
+   
+
+if __name__ == "__main__":
+    main()
+
